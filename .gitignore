@@ -1,0 +1,5 @@
+*.o
+*.tga
+fractal/fractal
+matmul/matmul
+qsort/qsort
