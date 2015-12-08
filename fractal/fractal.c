@@ -2,6 +2,7 @@
 #include <math.h>
 #include <string.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 // draws a mandelbrot fractal
 // compile with gcc fractal.c -lm -std=c99 -o fractal
