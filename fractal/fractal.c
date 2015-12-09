@@ -7,6 +7,16 @@
 // draws a mandelbrot fractal
 // compile with gcc fractal.c -lm -std=c99 -o fractal
 
+typedef struct
+{
+	unsigned int id;
+	float width;
+	float height;
+	unsigned int *pixmap;
+} Data;
+
+#define NUM_THREADS 8
+
 int pal[256] = 
 {
 	0xb2000a,0xb20009,0xb2000a,0xb1000a,0xb1000b,0xaf000d,0xaf000e,0xae000f,0xad0011,0xac0012,0xab0013,0xaa0015,
@@ -33,14 +43,21 @@ int pal[256] =
 	0xfcff,0xfcff,0xfcff,0xfcff,0xfcff,0xfcff,0xfcff,0xfcff,0xfcff
 };
 
-void mandelbrot(float width, float height, unsigned int *pixmap)
+void* mandelbrot(void* arg)
 {
+	Data* d = (Data*)arg;
+	unsigned int id = d->id;
+	float width = d->width;
+	float height = d->height;
+	unsigned int *pixmap = d->pixmap;
+	
+	printf("%d %f %f\n", id, width, height);
 	int i, j;
 	float xmin = -1.6f;
 	float xmax = 1.6f;
 	float ymin = -1.6f;
 	float ymax = 1.6f;
-	for (i = 0; i < height; i++) 
+	for (i = height/NUM_THREADS * id; i < height/NUM_THREADS * id + height/NUM_THREADS; i++) 
 	{
 		for (j = 0; j < width; j++) 
 		{
@@ -72,6 +89,7 @@ void mandelbrot(float width, float height, unsigned int *pixmap)
 			}
 		}
 	}
+	return 0;
 }
 
 void writetga(unsigned int *pixmap, unsigned int width, unsigned int height, char *name)
@@ -105,12 +123,36 @@ void writetga(unsigned int *pixmap, unsigned int width, unsigned int height, cha
 }
 
 
+
+
 int main(int a, char *args[])
 {
 	int i, j;
-	printf("fractal");
+	printf("fractal\n");
 	unsigned int* pixmap = malloc(1024*1024*sizeof(int));
-	mandelbrot(1024.0f, 1024.0f, pixmap);
+	
+	pthread_t threads[NUM_THREADS];
+	
+	Data d[NUM_THREADS];
+	
+	
+	for (i = 0; i < NUM_THREADS; i++)
+	{
+		d[i].id = i;
+		d[i].width = 1024.0f;		
+		d[i].height = 1024.0f;
+		d[i].pixmap = pixmap;
+
+		pthread_create(&(threads[i]), NULL, mandelbrot, &d[i]);
+	}
+	for (i = 0; i < NUM_THREADS; i++)
+	{
+		pthread_join(threads[i], NULL);
+	}
+	
+	
+	
+	//mandelbrot(1024.0f, 1024.0f, pixmap);
 	writetga(pixmap, 1024, 1024, "fracout.tga");
 	free(pixmap);
 	return 0;

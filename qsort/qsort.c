@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define KILO (2)
+#define KILO (3)
 //#define KILO (1024)
 
 #define MEGA (KILO*KILO)
@@ -155,6 +155,7 @@ static void* quick_sort(void* arg)
 	 	pthread_create(&thread1, NULL, quick_sort, &input);
 	 	/*quick_sort(v, low, pivot_index-1);*/
 	}
+	
 	if (pivot_index < high)
 	{
 		Data input;
@@ -166,7 +167,7 @@ static void* quick_sort(void* arg)
 		/*quick_sort(v, pivot_index+1, high);*/
 	}
 	
-	pthread_join(thread1, NULL);
+	pthread_join(thread2, NULL);
 	pthread_join(thread1, NULL);
 }
 
