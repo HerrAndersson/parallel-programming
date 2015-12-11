@@ -8,13 +8,15 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define KILO (3)
+#define KILO (2)
 //#define KILO (1024)
 
 #define MEGA (KILO*KILO)
 
 //#define MAX_ITEMS (64*MEGA)
-#define MAX_ITEMS (2*MEGA)
+#define MAX_ITEMS (4*MEGA)
+
+#define NUM_THREADS 8
 
 #define swap(v, a, b) {unsigned tmp; tmp=v[a]; v[a]=v[b]; v[b]=tmp;}
 
@@ -128,9 +130,6 @@ static void* quick_sort(void* arg)
 	unsigned low = d->low;
 	unsigned high = d->high;
 	
-	pthread_t thread1;
-	pthread_t thread2;
-	
 	unsigned pivot_index;
 	/* no need to sort a vector of zero or one element */
 	if (low >= high)
@@ -147,28 +146,13 @@ static void* quick_sort(void* arg)
 	/* sort the two sub arrays */
 	if (low < pivot_index)
 	{
-		Data input;
-		input.v = v;
-		input.low = low;
-		input.high = pivot_index-1;
-		
-	 	pthread_create(&thread1, NULL, quick_sort, &input);
-	 	/*quick_sort(v, low, pivot_index-1);*/
+	 	seq_quick_sort(v, low, pivot_index-1);
 	}
 	
 	if (pivot_index < high)
-	{
-		Data input;
-		input.v = v;
-		input.low = low;
-		input.high = pivot_index+1;
-		
-	 	pthread_create(&thread2, NULL, quick_sort, &input);		
-		/*quick_sort(v, pivot_index+1, high);*/
-	}
-	
-	pthread_join(thread2, NULL);
-	pthread_join(thread1, NULL);
+	{	
+		seq_quick_sort(v, pivot_index+1, high);
+	}	
 }
 
 int main(int argc, char **argv)
@@ -177,12 +161,27 @@ int main(int argc, char **argv)
 	init_array();
 	print_array();
 	
-	Data input;
-	input.v = v;
-	input.low = 0;
-	input.high = MAX_ITEMS-1;
-	quick_sort(&input);
+	pthread_t threads[NUM_THREADS];
+	Data d[NUM_THREADS];
 	
+	int i = 0;
+	for (i = 0; i < NUM_THREADS; i++)
+	{
+		d[i].v = v;	
+		d[i].low = i * (MAX_ITEMS / NUM_THREADS);
+		d[i].high = i * (MAX_ITEMS / NUM_THREADS) + (MAX_ITEMS / NUM_THREADS) - 1;
+
+		pthread_create(&(threads[i]), NULL, quick_sort, &d[i]);
+	}
+	
+	for (i = 0; i < NUM_THREADS; i++)
+	{
+		pthread_join(threads[i], NULL);
+	}
+	
+	print_array();
+	
+	seq_quick_sort(v, 0, MAX_ITEMS-1);
 	
 	print_array();
 }
