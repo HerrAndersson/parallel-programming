@@ -193,6 +193,6 @@ int main(int argc, char **argv)
 		pthread_join(threads[i], NULL);
 	}
 	
-	print_matrix();
+	//print_matrix();
 }
 

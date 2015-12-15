@@ -51,7 +51,6 @@ void* mandelbrot(void* arg)
 	float height = d->height;
 	unsigned int *pixmap = d->pixmap;
 	
-	printf("%d %f %f\n", id, width, height);
 	int i, j;
 	float xmin = -1.6f;
 	float xmax = 1.6f;
@@ -128,7 +127,6 @@ void writetga(unsigned int *pixmap, unsigned int width, unsigned int height, cha
 int main(int a, char *args[])
 {
 	int i, j;
-	printf("fractal\n");
 	unsigned int* pixmap = malloc(1024*1024*sizeof(int));
 	
 	pthread_t threads[NUM_THREADS];
@@ -149,10 +147,6 @@ int main(int a, char *args[])
 	{
 		pthread_join(threads[i], NULL);
 	}
-	
-	
-	
-	//mandelbrot(1024.0f, 1024.0f, pixmap);
 	writetga(pixmap, 1024, 1024, "fracout.tga");
 	free(pixmap);
 	return 0;

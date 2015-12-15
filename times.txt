@@ -1,0 +1,35 @@
+qsort seq
+===
+real	0m30.664s
+user	0m30.538s
+sys		0m0.124s
+
+qsort par
+===
+real	0m9.173s
+user	0m42.622s
+sys		0m0.324s
+
+fractal seq
+===
+real	0m3.234s
+user	0m3.225s
+sys		0m0.008s
+
+fractal par
+===
+real	0m1.324s
+user	0m3.256s
+sys		0m0.020s
+
+matmul seq
+===
+real	1m1.516s
+user	1m1.502s
+sys		0m0.008s
+
+matmul par
+===
+real	0m2.525s
+user	0m14.945s
+sys		0m0.016s
