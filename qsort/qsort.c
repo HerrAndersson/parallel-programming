@@ -192,8 +192,15 @@ main(int argc, char **argv)
 	d.v = v;
 	d.low = 0;
 	d.high = MAX_ITEMS - 1;
-	d.depth = 0;
+	d.depth = 1;
+
+
+	pthread_t thread;
 	
-	par_quick_sort(&d);
+	pthread_create(&thread, NULL, par_quick_sort, &d);
+
+	pthread_join(thread, NULL);
+
+	//par_quick_sort(&d);
 }
 
