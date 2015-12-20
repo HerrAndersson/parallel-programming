@@ -2,13 +2,13 @@ qsort seq
 ===
 real	0m30.664s
 user	0m30.538s
-sys		0m0.124s
+sys	0m0.124s
 
 qsort par
 ===
 real	0m9.173s
 user	0m42.622s
-sys		0m0.324s
+sys	0m0.324s
 
 qsort one
 ===
@@ -16,18 +16,25 @@ real	0m30.830s
 user	0m30.655s
 sys	0m0.176s
 
+qsort speedup
+===
+seq => par: 3,34
+seq => one: 0,99
+
+
+
 
 fractal seq
 ===
 real	0m3.234s
 user	0m3.225s
-sys		0m0.008s
+sys	0m0.008s
 
 fractal eight
 ===
 real	0m1.324s
 user	0m3.256s
-sys		0m0.020s
+sys	0m0.020s
 
 fractal one
 ===
@@ -36,14 +43,25 @@ user	0m3.229s
 sys	0m0.016s
 
 
+fractal speedup
+===
+seq => par: 2,44
+seq => one: 0,99
+
+
+
 matmul seq
 ===
 real	1m1.516s
 user	1m1.502s
-sys		0m0.008s
+sys	0m0.008s
 
 matmul eight
 ===
 real	0m2.525s
 user	0m14.945s
-sys		0m0.016s
+sys	0m0.016s
+
+matmul speedup
+===
+seq => par: 24,36
